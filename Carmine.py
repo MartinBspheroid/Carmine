@@ -46,7 +46,7 @@ class Carmine:
         
         _("adding listeners!")
         self.addListeners()
-        self.song.tracks[0].name = "OMG"
+        
         self.instance.show_message("CARMINE")
 
     def add_slotlistener(self, slot, tid, cid):
