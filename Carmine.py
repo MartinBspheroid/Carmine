@@ -46,7 +46,6 @@ class Carmine:
         
         _("adding listeners!")
         self.addListeners()
-        
         self.instance.show_message("CARMINE")
 
     def add_slotlistener(self, slot, tid, cid):
@@ -111,7 +110,7 @@ class Carmine:
         if clip.is_triggered == 1:
             state = 3
         _(str(clip.name) + " > state:" + str(state))
-        if(state is 2):
+        if(state is 2 and clip.name != ""):
             load_success = self.loadDevice(clip.name)
             if(load_success != True):
                 self.actions.append(lambda: self.loading_failed(clip))
