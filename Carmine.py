@@ -16,9 +16,7 @@ from ableton.v2.control_surface import ControlSurface as CS
 
 from random import randint
 
-oscEndpoint = RemixNet.OSCEndpoint()
-# oscEndpoint.send('/remix/oscserver/startup', 1)
-# oscEndpoint.send('/log', "HI FROM HERE!")
+oscEndpoint = RemixNet.OSCEndpoint("localhost",9001, "", 9000)
 def _(msg):
         oscEndpoint.send('/log',msg)
 
@@ -26,9 +24,6 @@ def _(msg):
 class Carmine:
     # liveApp.show_message("Oh hai!")
     __module__ = __name__
-
-    # def clipFire(self):
-    #     # self.song().tracks[1].color_index = randint(1,10)
 
     def __init__(self, c_instance):
         # super(Carmine, self).__init__(c_instance)
@@ -45,8 +40,14 @@ class Carmine:
         self.actions = []
         
         _("adding listeners!")
+        if self.song.visible_tracks_has_listener(self.addListeners) != 1:
+           self.song.add_visible_tracks_listener(self.addListeners)
+        
         self.addListeners()
         self.instance.show_message("CARMINE")
+
+    def refresh_state(self):
+        pass
 
     def add_slotlistener(self, slot, tid, cid):
         cb = lambda :self.slot_changestate(slot, tid, cid)
@@ -120,7 +121,7 @@ class Carmine:
 
     def addListeners(self):
         self.rem_clip_listeners()
-
+        
         tracks = self.song.visible_tracks
         clipSlots = []
         for track in tracks:
