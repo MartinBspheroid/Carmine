@@ -111,14 +111,15 @@ class Carmine:
         if clip.is_triggered == 1:
             state = 3
         _(str(clip.name) + " > state:" + str(state))
-        if(state == 2 or state == 3):
-            if(clip.canonical_parent.canonical_parent.devices[0].name is clip.name):
+        
+        
                   # skip this if names of loaded device is already same as clip we are launching
-                return
+            
         if(state == 2 and clip.name != ""):
-            load_success = self.loadDevice(clip.name)
-            if(load_success != True):
-                self.actions.append(lambda: self.loading_failed(clip))
+            if(clip.canonical_parent.canonical_parent.devices[0].name != clip.name):
+                load_success = self.loadDevice(clip.name)
+                if(load_success != True):
+                    self.actions.append(lambda: self.loading_failed(clip))
         # self._send_pos[x] = 3
     def loading_failed(self, clip):
         clip.color_index = 14
