@@ -111,6 +111,8 @@ class Carmine:
         if clip.is_triggered == 1:
             state = 3
         _(str(clip.name) + " > state:" + str(state))
+        if(clip.canonical_parent.canonical_parent.devices[0].name is clip.name):
+            return
         if(state is 2 and clip.name != ""):
             load_success = self.loadDevice(clip.name)
             if(load_success != True):
