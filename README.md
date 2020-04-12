@@ -59,6 +59,7 @@ Once Carmine is active it changes behaviour of clips in couple of certain ways:
  - This means that **it will replace just Instrument**, *not any effects that are already stacked after current Instrument or Instrument rack.* That way, you can keep all your filters/effects that you might use after Intrument as they are and  only replace instrument.  
  - **If Carmine cannot find  preset in your** `presets` **folder, it will change color of this clip to red to mark that it's unable to perform loading action.** 
  - If clip has **no name at all**, Carmine will **disregard this clip.** 
+ - You can store clips store clips in folders, up to 5 levels deep, to better organize presets. **Please keep in mind that in order for loading to work properly, presets should have unique names** (_eg.if presets have same name, Carmine will load first preset it will encounter during search_) 
  
 #### DEVELOPMENT:
 - Fork, send PR to your hearts desire. I'm not fluid in Python, so this is pretty much hacked version of liveOSC (specificaly [this version](https://github.com/dinchak/node-liveosc).
