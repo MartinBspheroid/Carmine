@@ -2,6 +2,7 @@
 
 Carmine is Ableton user remote script for Ableton Live. It allows you to recall Instrument racks by triggering clips in session view, designed to provide streamlined workflow during both preparation and performance of live sets.
 
+![](carminedemo.gif)
 
 Did you ever wonder how to recall instruments per clip? Sure, there are a couple of ways to do that at the moment.
 
