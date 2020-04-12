@@ -79,3 +79,6 @@ Once Carmine is active it changes behaviour of clips in couple of certain ways:
  - Luciano for making [this](https://github.com/lucianoiam/live_rpyc), and making my life much easier.
  - [This project](https://github.com/dinchak/node-liveosc) for pushing me towards right direction while poking around Live API (I actually borrowed some of the code as well).
  - [Isotonik's ClyphX Pro](https://isotonikstudios.com/product/clyphx-pro/) for showing me what is possible in Live with user script.
+
+### Credits:
+ - Websockets library is slightly modified version of [this library](https://github.com/dpallot/simple-websocket-server) made by [Dave](https://github.com/dpallot)
