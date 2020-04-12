@@ -17,29 +17,45 @@ from ableton.v2.control_surface import ControlSurface as CS
 
 from random import randint
 
+
+from SimpleWebSocketServer import *
+
+connections = []
+class SimpleEcho(WebSocket):
+
+    def handleMessage(self):
+        self.sendMessage(self.data)
+
+    def handleConnected(self):
+        connections.append(self)
+        self.sendMessage(u"CARMINE Connected")
+
+
+    def handleClose(self):
+        connections.remove(self)
+
+
+
+server = SimpleWebSocketServer('', 8000, SimpleEcho, 0.016)
+# server.serveforever()
+
 # oscEndpoint = RemixNet.OSCEndpoint("localhost",9001, "", 9000)
 # oscEndpoint = RemixNet.OSCEndpoint("localhost",9001, "", 9000)
 def _(msg):
-        # oscEndpoint.send('/log',msg)
-        pass
+        # server.sendMessage(msg)
+        for con in list(connections):
+            con.sendMessage(u""+msg)
+        # pass
 
 # import OSProxy
 class Carmine:
-    # liveApp.show_message("Oh hai!")
     __module__ = __name__
-
     def __init__(self, c_instance):
-        # super(Carmine, self).__init__(c_instance)
-        
-        
-        # with self.component_guard():
-        #     self.inst = c_instance
         self.instance = c_instance
         self.slisten = {}
         self.clisten = {}
         self.song = self.instance.song()
         self.app = Live.Application.get_application()
-        
         self.actions = []
         
         _("adding listeners!")
@@ -136,7 +152,7 @@ class Carmine:
             self.clisten[clip] = cb
 
     def clip_changestate(self, clip, x, y):
-        # _("Listener: x: " + str(x) + " y: " + str(y))
+        _("Listener: x: " + str(x) + " y: " + str(y))
 
         state = 1
         
@@ -148,7 +164,7 @@ class Carmine:
         _(str(clip.name) + " > state:" + str(state))
         
         
-                  # skip this if names of loaded device is already same as clip we are launching
+          # skip this if names of loaded device is already same as clip we are launching
             
         if(state == 2 and clip.name != ""):
             if(clip.canonical_parent.canonical_parent.devices[0].name != clip.name):
@@ -183,6 +199,8 @@ class Carmine:
         for action in self.actions:
             action()
         actions = []
+        server.serve()
+
     def refresh_state(self):
         pass
     def build_midi_map(self, midi_map_handle):
@@ -190,6 +208,8 @@ class Carmine:
             
     def disconnect(self):
         # oscEndpoint.shutdown()
+        _("Closing session...")
+        server.close()
         pass
         
     def connect_script_instances(self, instanciated_scripts):

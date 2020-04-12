@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+
+<meta charset="utf-8" />
+
+<title>WebSocket Test</title>
+
+<script language="javascript" type="text/javascript">
+// @ts-check
+let ws = null
+function connect() {
+    ws = new WebSocket('ws://localhost:8000');
+    ws.onopen = function () {
+        // subscribe to some channels
+        // ws.send(JSON.stringify({
+            //.... some message the I must send when I connect ....
+        }
+
+    ws.onmessage = function (e) {
+        console.log('Message:', e.data);
+        writeToScreen(">>> " +e.data)
+    };
+
+    ws.onclose = function (e) {
+        console.log('Socket is closed. Reconnect will be attempted in 1 second.', e.reason);
+        writeToScreen('Socket is closed. Reconnect will be attempted in 1 second. ' +  e.reason);
+        setTimeout(function () {
+            connect();
+        }, 1000);
+    };
+
+    ws.onerror = function (err) {
+        console.error('Socket encountered error: ', err.message, 'Closing socket');
+        writeToScreen('Socket encountered error: ' + err.message +  ' Closing socket');
+        ws.close();
+    };
+}
+
+function writeToScreen(message) {
+    document.myform.outputtext.value += "\n" + message
+    document.myform.outputtext.scrollTop = document.myform.outputtext.scrollHeight;
+
+}
+
+// function init() {
+//     document.myform.url.value = "ws://localhost:8000/"
+//     document.myform.inputtext.value = "Hello World!"
+//     document.myform.disconnectButton.disabled = true;
+// }
+
+// function doConnect() {
+    // websocket = new WebSocket(document.myform.url.value);
+    // websocket.onopen = function (evt) { onOpen(evt) };
+    // websocket.onclose = function (evt) { onClose(evt) };
+    // websocket.onmessage = function (evt) { onMessage(evt) };
+    // websocket.onerror = function (evt) { onError(evt) };
+// }
+
+// function onOpen(evt) {
+//     writeToScreen("connected\n");
+//     document.myform.connectButton.disabled = true;
+//     document.myform.disconnectButton.disabled = false;
+// }
+
+// function onClose(evt) {
+//     writeToScreen("disconnected\n");
+//     document.myform.connectButton.disabled = false;
+//     document.myform.disconnectButton.disabled = true;
+// }
+
+// function onMessage(evt) {
+//     writeToScreen("response: " + evt.data + '\n');
+// }
+
+// function onError(evt) {
+//     writeToScreen('error: ' + evt.data + '\n');
+
+//     websocket.close();
+
+//     document.myform.connectButton.disabled = false;
+//     document.myform.disconnectButton.disabled = true;
+
+// }
+
+// function doSend(message) {
+//     writeToScreen("sent: " + message + '\n');
+//     ws.send(message);
+// }
+
+
+
+window.addEventListener("load", connect, false);
+
+
+function sendText() {
+    ws.send(document.myform.inputtext.value);
+}
+
+function clearText() {
+    document.myform.outputtext.value = "";
+}
+
+
+
+
+</script>
+
+<div id="output"></div>
+
+<form name="myform">
+  <p>
+    <textarea name="outputtext" rows="20" cols="50"></textarea>
+  </p>
+  <p>
+    <textarea name="inputtext" cols="50"></textarea>
+  </p>
+  <p>
+    <textarea name="url" cols="50"></textarea>
+  </p>
+  <p>
+    <input type="button" name=sendButton value="Send" onClick="sendText();">
+    <input type="button" name=clearButton value="Clear" onClick="clearText();">
+    <input type="button" name=disconnectButton value="Disconnect" onClick="doDisconnect();">
+    <input type="button" name=connectButton value="Connect" onClick="doConnect();">
+  </p>
+
+
+</form>
+
+</html>
