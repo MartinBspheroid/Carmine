@@ -2,7 +2,8 @@
 # from __future__ import absolute_import, print_function, unicode_literals
 import Live
 import sys
-
+import inspect
+# import live_io
 import OSC
 import RemixNet
 
@@ -16,9 +17,19 @@ from ableton.v2.control_surface import ControlSurface as CS
 
 from random import randint
 
-oscEndpoint = RemixNet.OSCEndpoint("localhost",9001, "", 9000)
+def save(globals=None):
+    if globals is None:
+        frames = inspect.stack()
+        caller_frame = frames[-1][0]
+        globals = dict((k,v) for (k,v) in caller_frame.f_globals.items() if not k.startswith('__'))
+    return globals
+
+
+# oscEndpoint = RemixNet.OSCEndpoint("localhost",9001, "", 9000)
+# oscEndpoint = RemixNet.OSCEndpoint("localhost",9001, "", 9000)
 def _(msg):
-        oscEndpoint.send('/log',msg)
+        # oscEndpoint.send('/log',msg)
+        pass
 
 # import OSProxy
 class Carmine:
@@ -36,7 +47,9 @@ class Carmine:
         self.clisten = {}
         self.song = self.instance.song()
         self.app = Live.Application.get_application()
-
+        
+        
+        _(save())
         self.actions = []
         
         _("adding listeners!")
@@ -72,24 +85,56 @@ class Carmine:
         if slot.clip != None:
             self.add_cliplistener(slot.clip, tid, cid)
             
-    def loadDevice(self, name):
+    # def loadDevice(self, name):
+    #     _("Loadig device " + str(name))
+    #     FailedToFind = 1
+    #     projectFolder = self.app.browser.current_project
+    #     _(str(projectFolder))
+    #     # print(projectFolder.name)
+    #     item_iterator = projectFolder.iter_children
+    #     inneritems = [item for item in item_iterator]
+    #     for item in inneritems:
+    #         if item.name == "presets":
+    #             presetsIter = item.iter_children
+    #             presets = [preset for preset in presetsIter]
+    #             for preset in presets:
+    #                 if(preset.name == name + ".adg"):
+    #                     _("found item -> attempt to load!")
+    #                     self.app.browser.load_item(preset)
+    #                     return True
+    #     _("could not find preset " + str(name))
+    #     return False
+
+
+    def loadDevice(self,name):
         _("Loadig device " + str(name))
-        FailedToFind = 1
         projectFolder = self.app.browser.current_project
-        _(str(projectFolder))
-        # print(projectFolder.name)
-        item_iterator = projectFolder.iter_children
-        inneritems = [item for item in item_iterator]
+        inneritems = [item for item in projectFolder.iter_children]
         for item in inneritems:
             if item.name == "presets":
-                presetsIter = item.iter_children
-                presets = [preset for preset in presetsIter]
-                for preset in presets:
-                    if(preset.name == name + ".adg"):
-                        _("found item -> attempt to load!")
-                        self.app.browser.load_item(preset)
-                        return True
-        _("could not find preset " + str(name))
+                presets = [preset for preset in item.iter_children]
+                if self.folderSearch(presets, name, 1):
+                    return True
+
+        _("cound not find preset " + name)
+        return False
+
+    def folderSearch(self, presets, name, iterCounter):
+        # print presets
+        if(iterCounter > 5):
+            _("reached max recursion level, exiting..")
+            return False
+        for preset in presets:
+            if(preset.is_folder):
+                folder_presets = [p for p in preset.iter_children]
+                if self.folderSearch(folder_presets,name, iterCounter+1):
+                    return True
+    
+            if(preset.name == name + ".adg"):
+                _("found item " + name + "-> attempt to load!")
+                self.app.browser.load_item(preset)
+                return True
+        
         return False
 
 
@@ -154,7 +199,8 @@ class Carmine:
         self.refresh_state()            
             
     def disconnect(self):
-        pass
+        oscEndpoint.shutdown()
+        
     def connect_script_instances(self, instanciated_scripts):
         """
         Called by the Application as soon as all scripts are initialized.
