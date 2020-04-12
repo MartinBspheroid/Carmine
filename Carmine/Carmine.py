@@ -2,7 +2,7 @@
 # from __future__ import absolute_import, print_function, unicode_literals
 import Live
 import sys
-import inspect
+# import inspect
 # import live_io
 import OSC
 import RemixNet
@@ -16,14 +16,6 @@ from _Framework.SubjectSlot import Subject
 from ableton.v2.control_surface import ControlSurface as CS
 
 from random import randint
-
-def save(globals=None):
-    if globals is None:
-        frames = inspect.stack()
-        caller_frame = frames[-1][0]
-        globals = dict((k,v) for (k,v) in caller_frame.f_globals.items() if not k.startswith('__'))
-    return globals
-
 
 # oscEndpoint = RemixNet.OSCEndpoint("localhost",9001, "", 9000)
 # oscEndpoint = RemixNet.OSCEndpoint("localhost",9001, "", 9000)
@@ -48,8 +40,6 @@ class Carmine:
         self.song = self.instance.song()
         self.app = Live.Application.get_application()
         
-        
-        _(save())
         self.actions = []
         
         _("adding listeners!")
@@ -129,12 +119,12 @@ class Carmine:
                 folder_presets = [p for p in preset.iter_children]
                 if self.folderSearch(folder_presets,name, iterCounter+1):
                     return True
-    
+
             if(preset.name == name + ".adg"):
                 _("found item " + name + "-> attempt to load!")
                 self.app.browser.load_item(preset)
                 return True
-        
+
         return False
 
 
@@ -199,7 +189,8 @@ class Carmine:
         self.refresh_state()            
             
     def disconnect(self):
-        oscEndpoint.shutdown()
+        # oscEndpoint.shutdown()
+        pass
         
     def connect_script_instances(self, instanciated_scripts):
         """
