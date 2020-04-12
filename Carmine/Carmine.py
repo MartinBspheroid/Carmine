@@ -127,7 +127,7 @@ class Carmine:
                 load_success = self.loadDevice(clip.name)
                 if(load_success != True):
                     self.actions.append(lambda: self.loading_failed(clip))
-                    
+
     def loading_failed(self, clip):
         clip.color_index = 14
 
@@ -153,7 +153,7 @@ class Carmine:
 
         for action in self.actions:
             action()
-        actions = []
+            self.actions.remove(action)
         server.serve()
 
     def refresh_state(self):
