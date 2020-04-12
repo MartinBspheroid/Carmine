@@ -1,27 +1,16 @@
-# from __future__ import with_statement
-# from __future__ import absolute_import, print_function, unicode_literals
 import Live
 import sys
-# import inspect
-# import live_io
-import OSC
-import RemixNet
-
 from collections import OrderedDict
 from functools import partial
 from _Framework.CompoundComponent import CompoundComponent
 from _Framework.ControlSurface import ControlSurface
-# from _Framework.ControlSurface import ControlSurface
 from _Framework.SubjectSlot import Subject
 from ableton.v2.control_surface import ControlSurface as CS
-
-from random import randint
-
 
 from SimpleWebSocketServer import *
 
 connections = []
-class SimpleEcho(WebSocket):
+class MessageHandler(WebSocket):
 
     def handleMessage(self):
         self.sendMessage(self.data)
@@ -30,24 +19,16 @@ class SimpleEcho(WebSocket):
         connections.append(self)
         self.sendMessage(u"CARMINE Connected")
 
-
     def handleClose(self):
         connections.remove(self)
 
 
+server = SimpleWebSocketServer('', 8000, MessageHandler, 0.016)
 
-server = SimpleWebSocketServer('', 8000, SimpleEcho, 0.016)
-# server.serveforever()
-
-# oscEndpoint = RemixNet.OSCEndpoint("localhost",9001, "", 9000)
-# oscEndpoint = RemixNet.OSCEndpoint("localhost",9001, "", 9000)
 def _(msg):
-        # server.sendMessage(msg)
         for con in list(connections):
             con.sendMessage(u""+msg)
-        # pass
 
-# import OSProxy
 class Carmine:
     __module__ = __name__
     def __init__(self, c_instance):
@@ -84,33 +65,11 @@ class Carmine:
         self.slisten = {}
 
     def slot_changestate(self, slot, tid, cid):
-        # tmptrack = LiveUtils.getTrack(tid)
-        # armed = tmptrack.arm and 1 or 0
         
         # Added new clip
         if slot.clip != None:
             self.add_cliplistener(slot.clip, tid, cid)
-            
-    # def loadDevice(self, name):
-    #     _("Loadig device " + str(name))
-    #     FailedToFind = 1
-    #     projectFolder = self.app.browser.current_project
-    #     _(str(projectFolder))
-    #     # print(projectFolder.name)
-    #     item_iterator = projectFolder.iter_children
-    #     inneritems = [item for item in item_iterator]
-    #     for item in inneritems:
-    #         if item.name == "presets":
-    #             presetsIter = item.iter_children
-    #             presets = [preset for preset in presetsIter]
-    #             for preset in presets:
-    #                 if(preset.name == name + ".adg"):
-    #                     _("found item -> attempt to load!")
-    #                     self.app.browser.load_item(preset)
-    #                     return True
-    #     _("could not find preset " + str(name))
-    #     return False
-
+    
 
     def loadDevice(self,name):
         _("Loadig device " + str(name))
@@ -188,7 +147,6 @@ class Carmine:
                 c = tracks[track][clip]            
                 if c.clip != None:
                     pass
-                    # print(c.clip)
                     self.add_cliplistener(c.clip, track, clip)
                 
                 self.add_slotlistener(c, track, clip)
@@ -207,10 +165,8 @@ class Carmine:
         self.refresh_state()            
             
     def disconnect(self):
-        # oscEndpoint.shutdown()
         _("Closing session...")
         server.close()
-        pass
         
     def connect_script_instances(self, instanciated_scripts):
         """
