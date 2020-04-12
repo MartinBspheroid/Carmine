@@ -62,8 +62,8 @@ Once Carmine is active it changes behaviour of clips in couple of certain ways:
  - You can store clips store clips in folders, up to 5 levels deep, to better organize presets. **Please keep in mind that in order for loading to work properly, presets should have unique names** (_eg.if presets have same name, Carmine will load first preset it will encounter during search_) 
  
 #### DEVELOPMENT:
-- ~~Fork, send PR to your hearts desire. I'm not fluid in Python, so this is pretty much hacked version of liveOSC (specificaly [this version](https://github.com/dinchak/node-liveosc).~~ (*disabled for now as I had some problems with OSC crashing the script*)
-- That being said, if you listen to OSC messages on port 9001, you can get access to log messages. Convinient, but if things go south, you still have to go to Log.txt, hidden one Ableton folder, hidden in depths of your hard drive. Sad, I know, but I have not been able to redirect error messages to OSC yet. 
+- Fork, send PR to your hearts desire. I'm not fluid in Python, so this is pretty much hacked version of liveOSC (specificaly [this version](https://github.com/dinchak/node-liveosc).
+- Repo contains convinient **websocket.html** file, which might be used to debug script, as it communicate with outside world using websockets (on port 8000). Unfortunately, if things go south, you still have to go to Log.txt, hidden one Ableton folder, hidden in depths of your hard drive. One day, I will be able to somehow redirrect this to websockets as well. Hopefully. 
 
 ### TODO: 
 - check out how to handle automation on the clips. 
