@@ -85,7 +85,6 @@ class Carmine:
         return False
 
     def folderSearch(self, presets, name, iterCounter):
-        # print presets
         if(iterCounter > 5):
             _("reached max recursion level, exiting..")
             return False
@@ -114,10 +113,8 @@ class Carmine:
         _("Listener: x: " + str(x) + " y: " + str(y))
 
         state = 1
-        
         if clip.is_playing == 1:
             state = 2
-            
         if clip.is_triggered == 1:
             state = 3
         _(str(clip.name) + " > state:" + str(state))
@@ -130,7 +127,7 @@ class Carmine:
                 load_success = self.loadDevice(clip.name)
                 if(load_success != True):
                     self.actions.append(lambda: self.loading_failed(clip))
-        # self._send_pos[x] = 3
+                    
     def loading_failed(self, clip):
         clip.color_index = 14
 
